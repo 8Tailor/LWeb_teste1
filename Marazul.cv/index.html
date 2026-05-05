@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marazul Digital | Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cv-blue: #003893; --cv-red: #cf2027; --cv-yellow: #f7d116;
+            --bg: #f8fafc; --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; }
+        body { background: var(--bg); margin: 0; padding-bottom: 80px; } /* Espaço para o banner fixo */
+
+        /* HEADER COM AS 10 ESTRELAS */
+        header {
+            background: var(--cv-blue); padding: 15px 6%; display: flex;
+            justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .logo-container { display: flex; align-items: center; gap: 10px; }
+        .stars-arc { color: var(--cv-yellow); font-size: 0.8rem; letter-spacing: -2px; }
+        .logo { color: white; font-weight: 800; font-size: 1.4rem; text-decoration: none; }
+
+        /* INPUTS TAMANHO MÉDIO */
+        .form-medium { max-width: 450px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .form-medium input, .form-medium select { 
+            width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1.5px solid #e2e8f0; border-radius: 10px; outline: none;
+        }
+
+        /* BANNER PREMIUM RODAPÉ (PONTA A PONTA) */
+        .premium-footer-banner {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: linear-gradient(90deg, #001a46 0%, var(--cv-blue) 100%);
+            color: white; display: flex; align-items: center; overflow: hidden; z-index: 2000;
+            border-top: 2px solid var(--cv-yellow);
+        }
+        .marquee-content { display: flex; white-space: nowrap; animation: scrollText 20s linear infinite; }
+        .marquee-item { padding: 0 40px; font-weight: 600; font-size: 0.9rem; }
+        .marquee-item span { color: var(--cv-yellow); margin-right: 8px; }
+
+        @keyframes scrollText { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        /* CARDS E ESTRELA AMARELA */
+        .product-grid { padding: 20px 6%; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 18px; overflow: hidden; position: relative; border: 1px solid #eee; }
+        .verified-star { 
+            position: absolute; top: 10px; right: 10px; background: var(--cv-yellow); 
+            color: var(--cv-blue); width: 30px; height: 30px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 10;
+        }
+
+        /* ESTILO DOS BOTÕES */
+        .btn-cv { background: var(--cv-blue); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; }
+        .btn-cv:hover { transform: scale(1.02); background: #002a6e; }
+
+        .view { display: none; padding-top: 20px; }
+        .active-view { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--cv-blue);">
+        <div class="form-medium" style="text-align: center;">
+            <h2 style="color: var(--cv-blue)">MARAZUL</h2>
+            <input type="text" id="user" placeholder="Utilizador">
+            <input type="password" id="pass" placeholder="Senha">
+            <small onclick="gerarPass()" style="cursor:pointer; color:var(--cv-blue); display:block; margin-bottom:10px">Gerar Senha Segura</small>
+            <button class="btn-cv" onclick="login()">ENTRAR</button>
+        </div>
+    </div>
+
+    <div id="app" style="display:none">
+        <header>
+            <div class="logo-container">
+                <a href="#" class="logo">MARAZUL</a>
+                <div class="stars-arc">★★★★★★★★★★</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px; color:white; cursor:pointer" onclick="document.getElementById('menu').style.display='block'">
+                <span id="nav-name">Perfil</span>
+                <div style="width:35px; height:35px; background:var(--cv-yellow); border-radius:50%; display:flex; align-items:center; justify-content:center; color:black; font-weight:bold" id="nav-avatar">?</div>
+            </div>
+            
+            <div id="menu" style="position:fixed; top:70px; right:6%; background:white; border-radius:15px; display:none; flex-direction:column; box-shadow:0 10px 30px rgba(0,0,0,0.1); overflow:hidden; z-index:5000">
+                <div style="padding:15px 25px; cursor:pointer; border-bottom:1px solid #eee" onclick="show('comprar')">Comprar</div>
+                <div style="padding:15px 25px; cursor:pointer; border-bottom:1px solid #eee" onclick="show('vender')">Vender</div>
+                <div style="padding:15px 25px; cursor:pointer; border-bottom:1px solid #eee" onclick="show('perfil')">Perfil</div>
+                <div style="padding:15px 25px; cursor:pointer; border-bottom:1px solid #eee" onclick="show('config')">Configurações</div>
+                <div style="padding:15px 25px; cursor:pointer; color:var(--cv-red)" onclick="logout()">Sair</div>
+            </div>
+        </header>
+
+        <main id="view-comprar" class="view active-view">
+            <div style="padding: 20px 6%;">
+                <input type="text" id="busca" placeholder="🔍 Pesquisar produtos..." onkeyup="filtrar()" style="width:100%; max-width:600px; padding:15px; border-radius:50px; border:1px solid #ddd; outline:none; display:block; margin:auto">
+            </div>
+            <div class="product-grid" id="vitrine"></div>
+        </main>
+
+        <section id="view-vender" class="view">
+            <div class="form-medium">
+                <h3>Novo Anúncio</h3>
+                <div style="display:flex; gap:10px; margin-bottom:20px">
+                    <button id="b-free" onclick="setTier('free')" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd; cursor:pointer">FREE</button>
+                    <button id="b-premium" onclick="setTier('premium')" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd; cursor:pointer">PREMIUM (50cve)</button>
+                </div>
+                <input type="text" id="p-nome" placeholder="Nome do Produto">
+                <input type="text" id="p-preco" placeholder="Preço (CVE)">
+                <input type="text" id="p-img" placeholder="URL da Imagem">
+                <div id="premium-fields" style="display:none">
+                    <input type="text" id="p-desc" placeholder="Descrição curta para o rodapé">
+                    <input type="number" id="p-dias" placeholder="Dias de validade">
+                </div>
+                <button class="btn-cv" onclick="salvarProd()">PUBLICAR</button>
+            </div>
+        </section>
+
+        <section id="view-perfil" class="view">
+            <div class="form-medium">
+                <h3>Editar Perfil</h3>
+                <input type="text" id="u-nome" placeholder="Nome">
+                <input type="text" id="u-tel" placeholder="Telefone">
+                <input type="text" id="u-local" placeholder="Localidade">
+                <button class="btn-cv" onclick="salvarPerfil()">GUARDAR</button>
+            </div>
+        </section>
+
+        <div class="premium-footer-banner">
+            <div class="marquee-content" id="premium-marquee">
+                <div class="marquee-item"><span>★</span> Anuncie aqui com o plano Premium do Marazul Digital!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuarios = JSON.parse(localStorage.getItem('mz_users')) || [];
+        let produtos = JSON.parse(localStorage.getItem('mz_prods')) || [];
+        let logado = JSON.parse(localStorage.getItem('mz_sessao')) || null;
+        let tier = 'free';
+
+        window.onload = () => { if(logado) entrar(); };
+
+        function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(!u || !p) return;
+            
+            let userObj = usuarios.find(x => x.u === u && x.p === p);
+            if(!userObj) {
+                userObj = { u, p, nome: u, tel: '', local: '' };
+                usuarios.push(userObj);
+                localStorage.setItem('mz_users', JSON.stringify(usuarios));
+            }
+            logado = userObj;
+            localStorage.setItem('mz_sessao', JSON.stringify(logado));
+            entrar();
+        }
+
+        function entrar() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('nav-name').innerText = logado.nome;
+            document.getElementById('nav-avatar').innerText = logado.nome[0].toUpperCase();
+            render();
+            updateMarquee();
+        }
+
+        function setTier(t) {
+            tier = t;
+            document.getElementById('premium-fields').style.display = t === 'premium' ? 'block' : 'none';
+            document.getElementById('b-premium').style.background = t === 'premium' ? 'var(--cv-yellow)' : 'white';
+        }
+
+        function salvarProd() {
+            const prod = {
+                nome: document.getElementById('p-nome').value,
+                preco: document.getElementById('p-preco').value,
+                img: document.getElementById('p-img').value || 'https://via.placeholder.com/200',
+                premium: tier === 'premium',
+                desc: document.getElementById('p-desc').value,
+                dias: document.getElementById('p-dias').value,
+                vendedor: logado.nome
+            };
+            produtos.push(prod);
+            localStorage.setItem('mz_prods', JSON.stringify(produtos));
+            show('comprar'); render(); updateMarquee();
+        }
+
+        function render(lista = produtos) {
+            const v = document.getElementById('vitrine');
+            v.innerHTML = lista.map(p => `
+                <div class="card">
+                    <div class="verified-star">★</div>
+                    <img src="${p.img}" style="width:100%; height:180px; object-fit:cover">
+                    <div style="padding:15px">
+                        <h4 style="margin:0">${p.nome}</h4>
+                        <p style="color:var(--cv-blue); font-weight:800; margin:5px 0">${p.preco} CVE</p>
+                        <small>Por: ${p.vendedor}</small>
+                        <button style="width:100%; margin-top:10px; padding:8px; border:none; background:#22c55e; color:white; border-radius:5px; font-weight:bold">Mensagem</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateMarquee() {
+            const m = document.getElementById('premium-marquee');
+            const premiums = produtos.filter(p => p.premium);
+            if(premiums.length > 0) {
+                m.innerHTML = premiums.map(p => `
+                    <div class="marquee-item"><span>★ PREMIUM:</span> ${p.nome} - ${p.desc} (${p.preco} CVE)</div>
+                `).join('') + m.innerHTML;
+            }
+        }
+
+        function filtrar() {
+            const t = document.getElementById('busca').value.toLowerCase();
+            render(produtos.filter(p => p.nome.toLowerCase().includes(t)));
+        }
+
+        function show(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
+            document.getElementById('view-' + id).classList.add('active-view');
+            document.getElementById('menu').style.display = 'none';
+        }
+
+        function gerarPass() {
+            const p = Math.random().toString(36).slice(-8).toUpperCase();
+            document.getElementById('pass').value = p;
+            alert("Sua senha segura: " + p);
+        }
+
+        function logout() { localStorage.removeItem('mz_sessao'); location.reload(); }
+    </script>
+</body>
+</html>
